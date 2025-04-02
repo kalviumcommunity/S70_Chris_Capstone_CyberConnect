@@ -28,4 +28,14 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Update an AI analysis by ID (PUT)
+router.put("/:id", async (req, res) => {
+  try {
+    const updatedAnalysis = await AIAnalysis.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(updatedAnalysis);
+  } catch (error) {
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+
 module.exports = router;
