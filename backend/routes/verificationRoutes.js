@@ -2,6 +2,18 @@ const express = require("express");
 const Verification = require("../models/Verification");
 const router = express.Router();
 
+// Create a new verification (POST)
+router.post("/", async (req, res) => {
+  try {
+    const { incident_id, expert_id, status, comments } = req.body;
+    const newVerification = new Verification({ incident_id, expert_id, status, comments });
+    await newVerification.save();
+    res.status(201).json(newVerification);
+  } catch (error) {
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+
 // Get all verifications
 router.get("/", async (req, res) => {
   try {

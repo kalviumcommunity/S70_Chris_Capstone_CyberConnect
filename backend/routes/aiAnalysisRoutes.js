@@ -2,6 +2,22 @@ const express = require("express");
 const AIAnalysis = require("../models/AIAnalysis");
 const router = express.Router();
 
+// Create a new AI analysis (POST)
+router.post("/", async (req, res) => {
+  try {
+    const { threat_id, analysisResult, generatedAt } = req.body;
+    const newAnalysis = new AIAnalysis({
+      threat_id,
+      analysisResult,
+      generatedAt: generatedAt || Date.now()
+    });
+    await newAnalysis.save();
+    res.status(201).json(newAnalysis);
+  } catch (error) {
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+
 // Get all AI analysis results
 router.get("/", async (req, res) => {
   try {

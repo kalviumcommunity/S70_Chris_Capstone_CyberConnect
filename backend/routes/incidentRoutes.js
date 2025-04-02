@@ -2,6 +2,18 @@ const express = require("express");
 const Incident = require("../models/Incident");
 const router = express.Router();
 
+// Create a new incident (POST)
+router.post("/", async (req, res) => {
+  try {
+    const { title, description, user_id, threat_id } = req.body;
+    const newIncident = new Incident({ title, description, user_id, threat_id });
+    await newIncident.save();
+    res.status(201).json(newIncident);
+  } catch (error) {
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+
 // Get all incidents
 router.get("/", async (req, res) => {
   try {
