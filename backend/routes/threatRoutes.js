@@ -2,6 +2,18 @@ const express = require("express");
 const Threat = require("../models/Threat");
 const router = express.Router();
 
+// Create a new threat (POST)
+router.post("/", async (req, res) => {
+  try {
+    const { title, description, severity, reportedBy } = req.body;
+    const newThreat = new Threat({ title, description, severity, reportedBy });
+    await newThreat.save();
+    res.status(201).json(newThreat);
+  } catch (error) {
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+
 // Get all threats
 router.get("/", async (req, res) => {
   try {
