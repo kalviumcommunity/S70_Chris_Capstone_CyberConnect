@@ -35,4 +35,14 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// Update a threat by ID (PUT)
+router.put("/:id", async (req, res) => {
+  try {
+    const updatedThreat = await Threat.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(updatedThreat);
+  } catch (error) {
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+
 module.exports = router;

@@ -24,4 +24,15 @@ router.get("/:user_id", async (req, res) => {
   }
 });
 
+// Update an activity log by ID (PUT)
+router.put("/:id", async (req, res) => {
+  try {
+    const updatedLog = await ActivityLog.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(updatedLog);
+  } catch (error) {
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+
+
 module.exports = router;

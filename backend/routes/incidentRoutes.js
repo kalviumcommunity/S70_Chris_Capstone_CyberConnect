@@ -35,4 +35,14 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// Update an incident by ID (PUT)
+router.put("/:id", async (req, res) => {
+  try {
+    const updatedIncident = await Incident.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(updatedIncident);
+  } catch (error) {
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+
 module.exports = router;
