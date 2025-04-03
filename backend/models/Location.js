@@ -3,7 +3,7 @@ const crypto = require("crypto");
 
 const LocationSchema = new mongoose.Schema({
   location_id: { type: String, default: () => crypto.randomUUID(), unique: true },
-  incident_id: { type: mongoose.Schema.Types.ObjectId, ref: "Incident", required: true },
+  incident_id: { type: mongoose.Schema.Types.ObjectId, ref: "Incident", required: true }, // referencing Incident
   latitude: { type: Number, required: true },
   longitude: { type: Number, required: true },
   city: { type: String },
