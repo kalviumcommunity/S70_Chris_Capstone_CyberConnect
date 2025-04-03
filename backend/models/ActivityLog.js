@@ -3,7 +3,7 @@ const crypto = require("crypto");
 
 const ActivityLogSchema = new mongoose.Schema({
   log_id: { type: String, default: () => crypto.randomUUID(), unique: true },
-  user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, //referencing user
   action: { type: String, required: true },
   timestamp: { type: Date, default: Date.now },
 });

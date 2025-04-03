@@ -3,7 +3,7 @@ const crypto = require("crypto");
 
 const IncidentSchema = new mongoose.Schema({
   incident_id: { type: String, default: () => crypto.randomUUID(), unique: true },
-  user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // referencing User
   title: { type: String, required: true },
   description: { type: String, required: true },
   incident_type: { type: String, enum: ["phishing", "hacking", "scam", "data breach", "ransomware"], required: true },
