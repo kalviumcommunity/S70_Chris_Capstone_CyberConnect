@@ -10,7 +10,7 @@ const IncidentSchema = new mongoose.Schema({
   evidence: { type: String }, // File path or link
   status: { type: String, enum: ["pending", "under review", "resolved"], default: "pending" },
   reported_at: { type: Date, default: Date.now },
-  verified_by: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // Expert who verifies
+  verified_by: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // Expert who verifies // referencing User
 });
 
 module.exports = mongoose.model("Incident", IncidentSchema);
