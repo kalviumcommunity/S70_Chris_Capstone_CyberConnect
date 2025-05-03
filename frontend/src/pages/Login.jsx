@@ -18,7 +18,7 @@ const Login = () => {
       description: "Welcome back to Cyber Connect!",
     });
 
-    // Redirect to dashboard
+
     navigate('/dashboard');
   };
 

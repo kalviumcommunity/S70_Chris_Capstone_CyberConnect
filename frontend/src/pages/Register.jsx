@@ -22,7 +22,7 @@ const Register = () => {
       return;
     }
 
-    // Simulate successful registration
+
     toast({
       title: "Registration successful",
       description: "Welcome to Cyber Connect!",
