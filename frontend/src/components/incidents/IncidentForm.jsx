@@ -1,4 +1,3 @@
-
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,6 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { useToast } from "../../hooks/use-toast";
+import api from "../../lib/api"; // 1. Import API helper
 
 const formSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters."),
@@ -29,13 +29,49 @@ export function IncidentForm() {
     },
   });
 
-  function onSubmit(values) {
-    console.log(values);
-    toast({
-      title: "Incident Reported",
-      description: "Your security incident has been successfully reported.",
-    });
-    form.reset();
+  async function onSubmit(values) {
+    try {
+      // 2. Get the current user from LocalStorage (saved during Login)
+      // Note: You need to ensure your Login.jsx saves this: localStorage.setItem('user', JSON.stringify(response.data));
+      const userString = localStorage.getItem("user");
+      const user = userString ? JSON.parse(userString) : null;
+
+      if (!user || !user._id) {
+        toast({
+          title: "Authentication Error",
+          description: "You must be logged in to report an incident.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // 3. Send data to Backend
+      // We combine form values with the user_id required by the backend
+      const payload = {
+        ...values,
+        user_id: user._id, 
+        // Note: If your backend requires a 'threat_id', you might need to handle that here or make it optional in the backend model.
+      };
+
+      await api.post("/incidents", payload);
+
+      // 4. Success Handler
+      toast({
+        title: "Incident Reported",
+        description: "Your security incident has been successfully reported.",
+      });
+      
+      form.reset();
+
+    } catch (error) {
+      // 5. Error Handler
+      console.error("Report failed:", error);
+      toast({
+        title: "Submission Failed",
+        description: error.response?.data?.error || "Could not report incident.",
+        variant: "destructive",
+      });
+    }
   }
 
   return (

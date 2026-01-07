@@ -1,49 +1,20 @@
 const express = require("express");
-const User = require("../models/User");
 const router = express.Router();
+const userController = require("../controllers/userController");
+
+// Login User (POST) - This must be imported from the controller!
+router.post("/login", userController.loginUser);
 
 // Create a new user (POST)
-router.post("/", async (req, res) => {
-  try {
-    const { name, email, password, role } = req.body;
-    const newUser = new User({ name, email, password, role });
-    await newUser.save();
-    res.status(201).json(newUser);
-  } catch (error) {
-    res.status(500).json({ error: "Server Error" });
-  }
-});
+router.post("/", userController.createUser);
 
+// Get all users (GET)
+router.get("/", userController.getAllUsers);
 
-// Get all users
-router.get("/", async (req, res) => {
-  try {
-    const users = await User.find();
-    res.json(users);
-  } catch (error) {
-    res.status(500).json({ error: "Server Error" });
-  }
-});
-
-// Get user by ID
-router.get("/:id", async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    if (!user) return res.status(404).json({ error: "User not found" });
-    res.json(user);
-  } catch (error) {
-    res.status(500).json({ error: "Server Error" });
-  }
-});
+// Get user by ID (GET)
+router.get("/:id", userController.getUserById);
 
 // Update a user by ID (PUT)
-router.put("/:id", async (req, res) => {
-  try {
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(updatedUser);
-  } catch (error) {
-    res.status(500).json({ error: "Server Error" });
-  }
-});
+router.put("/:id", userController.updateUser);
 
 module.exports = router;

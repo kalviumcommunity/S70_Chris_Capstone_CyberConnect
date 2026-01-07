@@ -5,21 +5,29 @@ import { Button } from '../ui/Button';
 import { Input } from '../ui/input';
 
 function AuthForm({ type, onSubmit }) {
+  // 1. Add State for Name
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  // ✅ CHANGED: Made this function async to handle API calls properly
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      onSubmit({ email, password, confirmPassword });
+    try {
+      // ✅ CHANGED: Added 'await' so we wait for the backend response
+      await onSubmit({ name, email, password, confirmPassword });
+    } catch (error) {
+      console.error("Form submission error:", error);
+    } finally {
+      // ✅ CHANGED: setLoading(false) is now here.
+      // It runs ONLY after the API call finishes (success or fail).
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -43,6 +51,28 @@ function AuthForm({ type, onSubmit }) {
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        
+        {/* 3. Add Name Input Field (Only for Register) */}
+        {type === 'register' && (
+          <div className="space-y-1">
+            <label htmlFor="name" className="text-sm font-medium">
+              Full Name
+            </label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#717d8a]" />
+              <Input
+                id="name"
+                type="text"
+                placeholder="John Doe"
+                className="pl-10"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+        )}
+
         <div className="space-y-1">
           <label htmlFor="email" className="text-sm font-medium">
             Email address
@@ -64,7 +94,7 @@ function AuthForm({ type, onSubmit }) {
         {type !== 'forgot-password' && (
           <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <label htmlFor="password" className="text-sm  font-medium">
+              <label htmlFor="password" className="text-sm font-medium">
                 Password
               </label>
               {type === 'login' && (
@@ -161,7 +191,7 @@ function AuthForm({ type, onSubmit }) {
             className="w-full h-11 gap-2"
             onClick={() => console.log('Google sign in clicked')}
           >
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M17.64 9.20455C17.64 8.56637 17.5827 7.95273 17.4764 7.36364H9V10.845H13.8436C13.635 11.97 13.0009 12.9232 12.0477 13.5614V15.8195H14.9564C16.6582 14.2527 17.64 11.9455 17.64 9.20455Z" fill="#4285F4"/>
               <path d="M9 18C11.43 18 13.4673 17.1941 14.9564 15.8195L12.0477 13.5614C11.2418 14.1014 10.2109 14.4204 9 14.4204C6.65591 14.4204 4.67182 12.8373 3.96409 10.71H0.957275V13.0418C2.43818 15.9832 5.48182 18 9 18Z" fill="#34A853"/>
               <path d="M3.96409 10.71C3.78409 10.17 3.68182 9.59318 3.68182 9C3.68182 8.40682 3.78409 7.83 3.96409 7.29V4.95818H0.957273C0.347727 6.17318 0 7.54773 0 9C0 10.4523 0.347727 11.8268 0.957273 13.0418L3.96409 10.71Z" fill="#FBBC05"/>
@@ -171,7 +201,7 @@ function AuthForm({ type, onSubmit }) {
           </Button>
         )}
       </form>
-
+      
       <div className="mt-8 text-center text-sm">
         {type === 'login' && (
           <p className="text-muted-foreground">
